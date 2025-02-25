@@ -2,15 +2,17 @@
 declare(strict_types=1);
 
 require 'vendor/autoload.php';
+require 'Todo.php';
 
 use GuzzleHttp\Client;
 
 class Bot {
-  private string $api;
-  private        $http;
   public  string $text;
   public  int    $chatId;
   public  string $firstName;
+
+  private string $api;
+  private        $http;
 
   public function __construct(string $token){
     $this->api  = "https://api.telegram.org/bot$token/"; // $token got from credentials.php // FIXME: Replace with .env
@@ -28,7 +30,6 @@ class Bot {
       '/start' => $this->handleStartCommand(),
       '/list'  => $this->handleListCommand(),
     };
-
   }
 
   public function handleStartCommand(){
@@ -47,5 +48,17 @@ class Bot {
             'text'    => $text
         ]
       ]);
+  }
+
+  public function handleListCommand(){
+    $tasks = (new Todo())->getTasks();
+
+    $this->http->post('sendMessage', [
+        'form_params' => [
+            'chat_id' => $this->chatId,
+            'text'    => print_r($tasks, 1)
+        ]
+      ]);
+
   }
 }

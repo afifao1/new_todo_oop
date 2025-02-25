@@ -1,7 +1,16 @@
 <?php
+require 'Todo.php';
+
+$servername = "localhost";
+$username = "root";
+$password = "1234";
 
 
-// Import DB
+try {
+  $conn = new PDO("mysql:host=$servername;dbname=todo", $username, $password);
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+}
 $text = isset($_POST['new_task']) ? $_POST['new_task'] : null;
 if($text != null) {
     $conn->query("INSERT INTO todos( task ) VALUES ('$text')");
@@ -38,7 +47,8 @@ if (isset($_GET['delete'])) {
             </form>
             <ul class="list">
             <?php
-                $data = $conn->query("SELECT * FROM todos")->fetchAll(PDO::FETCH_ASSOC);
+//$data = $conn->query("SELECT * FROM todos")->fetchAll(PDO::FETCH_ASSOC);
+$data = (new Todo())->getTasks();
                 if(count($data) > 0) {
                     foreach($data as $item) {
                         $status = $item['status'] ? '✅' :'🟢';

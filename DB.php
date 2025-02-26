@@ -5,9 +5,9 @@ class DB {
 
   public function __construct(
     public string $host     = 'localhost',
-    public string $database,
+    public string $database = 'todo_app',
     public string $username = 'root',
-    public string $password = 'root' 
+    public string $password = 'root'
   ){}
 
   public function connect(){

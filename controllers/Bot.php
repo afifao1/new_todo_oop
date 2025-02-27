@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 require 'vendor/autoload.php';
-require 'Todo.php';
+//require __DIR__ . '/../models/Todo.php';
 
 use GuzzleHttp\Client;
 
@@ -51,12 +51,31 @@ class Bot {
   }
 
   public function handleListCommand(){
+    $tasks = (new Todo())->getTasks();
+
     $this->http->post('sendMessage', [
         'form_params' => [
             'chat_id' => $this->chatId,
-            'text'    => print_r($tasks, 1)
+            'text'    => print_r($tasks, true)
         ]
       ]);
 
+  }
+
+  public function setWebhook(string $url): string {
+    try{
+      $response = $this->http->post('setWebhook', [
+        'form_params' => [
+          'url'                  => $url,
+          'drop_pending_updates' => true
+        ]
+      ]);
+
+      $response = json_decode($response->getBody()->getContents());
+    
+      return $response->description;
+    } catch(Exception $e){
+      return $e->getMessage();
+    }
   }
 }

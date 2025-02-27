@@ -2,12 +2,25 @@
 declare(strict_types=1);
 
 require 'credentials.php';
-require 'controllers/Web2.php';
+
+spl_autoload_register(function ($class) {
+    $directories = [
+        __DIR__ . '/controllers/',
+        __DIR__ . '/models/'
+    ];
+
+    foreach ($directories as $directory) {
+        $path = $directory . $class . '.php';
+        if (file_exists($path)) {
+            require_once $path;
+            return;
+        }
+    }
+});
 
 $update = file_get_contents('php://input');
 
 if($update){
-  require 'Bot.php';
   (new Bot($token))->handle($update);
 
   return;
@@ -15,8 +28,8 @@ if($update){
 
 if(isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] == '/web2'){
 
-  require 'public/view.php';
-  return;
+  //require 'public/view.php';
+  //return;
   $web2 = new Web2();
 
   print_r($web2->getTasks());

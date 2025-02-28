@@ -7,7 +7,11 @@ class Todo {
   private PDO $db;
 
   public function __construct(){
-    $this->db = (new DB('localhost', 'todo', 'root', '1234'))->connect();
+    $this->db = (new DB(
+      host    : $_ENV['HOST'],
+      database: $_ENV['DB_NAME'],
+      username: $_ENV['DB_USER'],
+      password: $_ENV['DB_PASSWORD']))->connect();
   }
 
   public function getTasks(): array {

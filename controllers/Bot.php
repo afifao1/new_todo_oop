@@ -1,8 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require 'vendor/autoload.php';
-//require __DIR__ . '/../models/Todo.php';
+//require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
 
